@@ -17,22 +17,10 @@ spec:
         image: registryqln8975.azurecr.io/tripinsights/poi:1.0
         ports:
         - containerPort: 80
+        envFrom:
+        - secretRef:
+            name: tripinsightsdb
         env:
-        - name: SQL_USER
-          valueFrom:
-            secretKeyRef:
-              name: tripinsightsdb
-              key: SQL_USER
-        - name: SQL_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: tripinsightsdb
-              key: SQL_PASSWORD
-        - name: SQL_SERVER
-          valueFrom:
-            secretKeyRef:
-              name: tripinsightsdb
-              key: SQL_SERVER
         - name: ASPNETCORE_ENVIRONMENT
           value: Production
 ---
@@ -45,6 +33,7 @@ metadata:
 spec:
   ports:
   - port: 80
+    targetPort: 8080
     protocol: TCP
   selector:
     run: poi
