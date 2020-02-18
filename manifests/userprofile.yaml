@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: userprofile-deployment
+spec:
+  selector:
+    matchLabels:
+      run: poi
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        run: poi
+    spec:
+      containers:
+      - name: poi
+        image: registryqln8975.azurecr.io/tripinsights/userprofile:1.0
+        ports:
+        - containerPort: 80
+        envFrom:
+        - secretRef:
+            name: tripinsightsdb
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: userprofile-service
+  labels:
+    run: poi
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+  selector:
+    run: poi
