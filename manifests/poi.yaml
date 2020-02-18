@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: poi-deployment
+spec:
+  selector:
+    matchLabels:
+      run: poi
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        run: poi
+    spec:
+      containers:
+      - name: poi
+        image: registryqln8975.azurecr.io/tripinsights/poi:1.0
+        ports:
+        - containerPort: 80
+        env:
+        - name: SQL_USER
+          valueFrom:
+            secretKeyRef:
+              name: tripinsightsdb
+              key: SQL_USER
+        - name: SQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: tripinsightsdb
+              key: SQL_PASSWORD
+        - name: SQL_SERVER
+          valueFrom:
+            secretKeyRef:
+              name: tripinsightsdb
+              key: SQL_SERVER
+        - name: ASPNETCORE_ENVIRONMENT
+          value: Production
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: poi-service
+  labels:
+    run: poi
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+  selector:
+    run: poi
