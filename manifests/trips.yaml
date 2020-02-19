@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: poi-deployment
+  name: trips-deployment
 spec:
   selector:
     matchLabels:
-      run: poi
+      run: trips
   replicas: 1
   template:
     metadata:
       labels:
-        run: poi
+        run: trips
     spec:
       containers:
-      - name: poi
-        image: registryqln8975.azurecr.io/tripinsights/poi:1.0
+      - name: trips
+        image: registryqln8975.azurecr.io/tripinsights/trips:1.0
         ports:
         - containerPort: 80
         envFrom:
@@ -28,16 +28,18 @@ spec:
               key: SQL_PASS
         - name: ASPNETCORE_ENVIRONMENT
           value: Production
+        - name: OPENAPI_DOCS_URI
+          value: http://localhost
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: poi-service
+  name: trips-service
   labels:
-    run: poi
+    run: trips
 spec:
   ports:
   - port: 80
     protocol: TCP
   selector:
-    run: poi
+    run: trips
