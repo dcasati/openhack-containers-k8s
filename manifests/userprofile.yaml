@@ -5,15 +5,15 @@ metadata:
 spec:
   selector:
     matchLabels:
-      run: poi
+      run: userprofile
   replicas: 1
   template:
     metadata:
       labels:
-        run: poi
+        run: userprofile
     spec:
       containers:
-      - name: poi
+      - name: userprofile
         image: registryqln8975.azurecr.io/tripinsights/userprofile:1.0
         ports:
         - containerPort: 80
@@ -26,10 +26,10 @@ kind: Service
 metadata:
   name: userprofile-service
   labels:
-    run: poi
+    run: userprofile
 spec:
   ports:
   - port: 80
     protocol: TCP
   selector:
-    run: poi
+    run: userprofile
