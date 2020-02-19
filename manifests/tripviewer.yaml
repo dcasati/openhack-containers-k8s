@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tripviewer-deployment
+spec:
+  selector:
+    matchLabels:
+      run: tripviewer
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        run: tripviewer
+    spec:
+      containers:
+      - name: tripviewer
+        image: registryqln8975.azurecr.io/tripinsights/tripviewer:1.0
+        ports:
+        - containerPort: 80
+        env:
+        - name: TRIPS_API_ENDPOINT
+          value: http://trips-service/
+        - name: USERPROFILE_API_ENDPOINT
+          value: http://userprofile-service/
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tripviewer-service
+  labels:
+    run: tripviewer
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+  selector:
+    run: tripviewer
+

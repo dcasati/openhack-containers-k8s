@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-java-deployment
+spec:
+  selector:
+    matchLabels:
+      run: user-java
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        run: user-java
+    spec:
+      containers:
+        - name: user-java
+          image: registryqln8975.azurecr.io/tripinsights/user-java:1.0
+          ports:
+            - containerPort: 80
+          envFrom:
+            - secretRef:
+              name: tripinsightsdb
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: Production
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-java-service
+  labels:
+    run: user-java
+spec:
+  ports:
+    - port: 80
+      protocol: TCP
+  selector:
+    run: user-java
