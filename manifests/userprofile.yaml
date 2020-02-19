@@ -16,11 +16,27 @@ spec:
       containers:
       - name: userprofile
         image: registryqln8975.azurecr.io/tripinsights/userprofile:1.0
+        volumeMounts:
+        - name: userprofile-kv
+          mountPath: /secrets
+          readOnly: true
         ports:
         - containerPort: 80
-        envFrom:
-        - secretRef:
-            name: tripinsightsdb
+      volumes:
+      - name: userprofile-kv
+        flexVolume:
+          driver: "azure/kv"
+          secretRef:
+            name: kvcreds
+          options:
+            usepodidentity: "false"
+            keyvaultname: "team2keyvault"
+            keyvaultobjectnames: SQL-USER;SQL-PASSWORD;SQL-FDQN
+            keyvaultobjecttypes: secret;secret;secret
+            keyvaultobjectaliases: "SQL_USER;SQL_PASSWORD;SQL_SERVER"
+            resourcegroup: "teamResources"
+            subscriptionid: "4fd85f80-d7c8-46d0-9b86-ba3b7402377a"
+            tenantid: "6065c98a-b00b-42a9-a805-f81775ebdf92"
 ---
 apiVersion: v1
 kind: Service
