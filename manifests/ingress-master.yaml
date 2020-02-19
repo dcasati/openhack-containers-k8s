@@ -1,0 +1,31 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-master
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.org/mergeable-ingress-type: "master"
+spec:
+  tls:
+  - http:
+      paths:
+      - backend:
+          serviceName: poi-service
+          servicePort: 80
+        path: /api/poi
+      - backend:
+          serviceName: user-java-service
+          servicePort: 80
+        path: /api/user-java
+      - backend:
+          serviceName: userprofile-service
+          servicePort: 80
+        path: /api/user
+      - backend:
+          serviceName: trips-service
+          servicePort: 80
+        path: /api/trips  
+      - backend:
+          serviceName: tripviewer-service
+          servicePort: 80
+        path: /
