@@ -21,6 +21,11 @@ spec:
         - secretRef:
             name: tripinsightsdb
         env:
+        - name: SQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: tripinsightsdb
+              key: SQL_PASS
         - name: ASPNETCORE_ENVIRONMENT
           value: Production
 ---
